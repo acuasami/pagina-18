@@ -61,41 +61,36 @@ def get_kpis():
         
     conn.close()
     return jsonify(kpis)
-
+    
 @app.route('/api/dashboard/tickets')
 def get_tickets():
     conn = get_db_connection()
     if not conn: return jsonify([]), 500
     cur = conn.cursor()
-    data = []
-    
     try:
-        # --- AQUÍ ESTABA EL ERROR ---
-        # Ahora seleccionamos tus columnas reales: id_clientes, num_autobus, fecha_creacion
-        # Y las renombramos (alias) para que el HTML las entienda.
-        
         query = """
             SELECT 
-                id, 
-                CAST(id_clientes AS VARCHAR) as empresa,  -- Mostramos el ID del cliente temporalmente
-                num_autobus as tipo_falla,                -- Usamos num_autobus en lugar de tipo falla por ahora
-                'Por Asignar' as tecnico,                 -- Tu tabla tickets NO tiene columna técnico
-                TO_CHAR(fecha_creacion, 'DD/MM/YYYY') as fecha_fmt, 
-                estado 
-            FROM tickets 
-            ORDER BY fecha_creacion DESC 
+                t.id, 
+                e.empresa as empresa, 
+                f.falla as tipo_falla,
+                'Sin Técnico' as tecnico, 
+                TO_CHAR(t.fecha_creacion, 'DD/MM/YYYY') as fecha_fmt, 
+                t.estado 
+            FROM tickets t
+            JOIN cliente c ON t.id_clientes = c.id
+            JOIN empresas e ON c.id_empresa = e.id
+            JOIN falla_reportada f ON t.id_falla_reportada = f.id
+            ORDER BY t.fecha_creacion DESC 
             LIMIT 10
         """
         cur.execute(query)
         data = cur.fetchall()
-        
+        return jsonify(data)
     except Exception as e:
-        print(f"⚠️ Error SQL en Tabla Tickets: {e}")
-        # Si falla, devolvemos lista vacía para no romper la página
-        data = []
-        
-    conn.close()
-    return jsonify(data)
+        print(f"Error: {e}")
+        return jsonify([]), 500
+    finally:
+        conn.close()
 
 # --- APIS VACÍAS (Para que no marquen error las otras pestañas) ---
 @app.route('/api/incidencias')
@@ -109,4 +104,5 @@ def api_4(): return jsonify([])
 
 if __name__ == '__main__':
     # El puerto 5000 es el estándar
+
     app.run(debug=True, port=5000)
