@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recuperar Contraseña - INSITRA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --color-dark-magenta: #751643;
+            --color-vivid-pink: #b0044b;
+            --color-dark-blue: #042b42;
+            --color-light-blue: #195e7c;
+            --bg-white: #ffffff;
+            --border-color: #e5e7eb;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-white);
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0; position: relative; overflow: hidden;
+        }
+        .background-decoration { position: fixed; width: 100%; height: 100%; z-index: -1; opacity: 0.06; }
+        .gradient-circle { position: absolute; border-radius: 50%; filter: blur(60px); }
+        .circle-1 { width: 300px; height: 300px; background: linear-gradient(90deg, var(--color-light-blue) 0%, var(--color-dark-blue) 100%); top: -100px; left: -100px; }
+        .circle-2 { width: 400px; height: 400px; background: linear-gradient(90deg, var(--color-vivid-pink) 0%, var(--color-dark-magenta) 100%); bottom: -150px; right: -150px; }
+        
+        .recovery-container {
+            background-color: var(--bg-white); padding: 40px; border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08); width: 100%; max-width: 420px;
+            border: 1px solid var(--border-color); position: relative;
+        }
+        .recovery-container::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--color-light-blue) 0%, var(--color-dark-blue) 100%);
+        }
+        h2 { text-align: center; color: var(--color-dark-blue); margin-bottom: 15px; }
+        p { text-align: center; color: #666; margin-bottom: 30px; font-size: 15px; }
+        
+        input {
+            width: 100%; padding: 14px 16px; margin-bottom: 20px;
+            border: 1px solid var(--border-color); border-radius: 8px; box-sizing: border-box;
+        }
+        .btn-recuperar {
+            width: 100%; padding: 16px;
+            background: linear-gradient(90deg, var(--color-light-blue) 0%, var(--color-dark-blue) 100%);
+            color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600; cursor: pointer;
+        }
+        .back-link {
+            display: block; text-align: center; margin-top: 25px; color: var(--color-light-blue); text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-decoration">
+        <div class="gradient-circle circle-1"></div>
+        <div class="gradient-circle circle-2"></div>
+    </div>
+    <div class="recovery-container">
+        <h2>Recuperar Acceso</h2>
+        <p>Ingresa tu correo para recibir instrucciones de restablecimiento.</p>
+        <form id="recoveryForm">
+            <input type="email" placeholder="correo@ejemplo.com" required>
+            <button type="submit" class="btn-recuperar">ENVIAR INSTRUCCIONES</button>
+        </form>
+        <a href="login.html" class="back-link">← Volver al Login</a>
+    </div>
+    <script>
+        document.getElementById('recoveryForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Instrucciones enviadas (Simulación)');
+            window.location.href = 'login.html';
+        });
+    </script>
+</body>
+</html>

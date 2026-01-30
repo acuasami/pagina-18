@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - INSITRA</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --color-dark-magenta: #751643;
+            --color-vivid-pink: #b0044b;
+            --color-dark-blue: #042b42;
+            --color-light-blue: #195e7c;
+            --bg-white: #ffffff;
+            --border-color: #e5e7eb;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-white);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Fondo decorativo */
+        .background-decoration {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 0.06;
+        }
+        .gradient-circle {
+            position: absolute; border-radius: 50%; filter: blur(60px);
+        }
+        .circle-1 {
+            width: 300px; height: 300px;
+            background: linear-gradient(90deg, var(--color-vivid-pink) 0%, var(--color-dark-magenta) 100%);
+            top: -100px; left: -100px;
+        }
+        .circle-2 {
+            width: 400px; height: 400px;
+            background: linear-gradient(90deg, var(--color-light-blue) 0%, var(--color-dark-blue) 100%);
+            bottom: -150px; right: -150px;
+        }
+        
+        .login-container {
+            background-color: var(--bg-white);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+            width: 100%; max-width: 420px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .login-container::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
+            background: linear-gradient(90deg, var(--color-vivid-pink) 0%, var(--color-dark-magenta) 100%);
+        }
+        
+        .logo-container { text-align: center; margin-bottom: 30px; }
+        .logo { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .logo-icon {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, var(--color-dark-blue) 0%, var(--color-light-blue) 100%);
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 22px;
+        }
+        .logo-text {
+            font-size: 24px; font-weight: 700;
+            background: linear-gradient(90deg, var(--color-dark-blue) 0%, var(--color-light-blue) 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .logo-subtitle { font-size: 14px; color: #666; letter-spacing: 2px; text-transform: uppercase; font-weight: 600; }
+        
+        h2 { text-align: center; color: var(--color-dark-blue); margin-bottom: 30px; font-size: 24px; }
+        
+        .form-group { margin-bottom: 24px; }
+        label { display: block; margin-bottom: 8px; color: var(--color-dark-blue); font-weight: 600; font-size: 14px; }
+        
+        .input-with-icon { position: relative; }
+        .input-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--color-light-blue); }
+        input {
+            width: 100%; padding: 14px 16px 14px 45px;
+            border: 1px solid var(--border-color); border-radius: 8px; font-size: 15px; box-sizing: border-box;
+        }
+        input:focus { outline: none; border-color: var(--color-light-blue); box-shadow: 0 0 0 3px rgba(25, 94, 124, 0.15); }
+        
+        .btn-ingresar {
+            width: 100%; padding: 16px;
+            background: linear-gradient(90deg, var(--color-dark-magenta) 0%, var(--color-vivid-pink) 100%);
+            color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: all 0.3s ease; margin-top: 10px;
+        }
+        .btn-ingresar:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(117, 22, 67, 0.3); }
+        
+        .links { text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid var(--border-color); }
+        .links a { color: var(--color-light-blue); text-decoration: none; font-size: 14px; font-weight: 500; }
+        .links a:hover { color: var(--color-dark-blue); }
+    </style>
+</head>
+<body>
+    <div class="background-decoration">
+        <div class="gradient-circle circle-1"></div>
+        <div class="gradient-circle circle-2"></div>
+    </div>
+
+    <div class="login-container">
+        <div class="logo-container">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-ticket-alt"></i></div>
+                <div><div class="logo-text">INSITRA</div><div class="logo-subtitle">SISTEMA DE TICKETS</div></div>
+            </div>
+        </div>
+        
+        <h2>Iniciar Sesión</h2>
+        <form action="index.html">
+            <div class="form-group">
+                <label for="usuario">Usuario</label>
+                <div class="input-with-icon">
+                    <div class="input-icon"><i class="fas fa-user"></i></div>
+                    <input type="text" id="usuario" name="usuario" placeholder="Ingrese su usuario" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Contraseña</label>
+                <div class="input-with-icon">
+                    <div class="input-icon"><i class="fas fa-lock"></i></div>
+                    <input type="password" id="password" name="password" placeholder="••••••••" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-ingresar">INGRESAR</button>
+        </form>
+        
+        <div class="links">
+            <a href="recuperacion.html"><i class="fas fa-key"></i> ¿Olvidaste tu contraseña?</a>
+        </div>
+    </div>
+</body>
+</html>
