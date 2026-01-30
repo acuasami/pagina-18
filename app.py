@@ -86,6 +86,23 @@ def get_tickets():
         return jsonify([]), 500
     finally:
         conn.close()
+
+@app.route('/api/tickets/update_status', methods=['POST'])
+def update_ticket_status():
+    data = request.json
+    ticket_id = data.get('id')
+    nuevo_estado = data.get('estado')
+    
+    conn = get_db_connection()
+    cur = conn.cursor()
+    try:
+        cur.execute("UPDATE tickets SET estado = %s WHERE id = %s", (nuevo_estado, ticket_id))
+        conn.commit()
+        return jsonify({"status": "success"})
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+    finally:
+        conn.close()
         
 # --- APIS VACÍAS (Para que no marquen error las otras pestañas) ---
 @app.route('/api/incidencias')
@@ -101,3 +118,4 @@ if __name__ == '__main__':
     # El puerto 5000 es el estándar
 
     app.run(debug=True, port=5000)
+
