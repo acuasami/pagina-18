@@ -35,16 +35,13 @@ def get_kpis():
     conn = get_db_connection()
     if not conn: return jsonify({"total":0}), 500
     cur = conn.cursor()
-    
     kpis = {'total':0, 'abiertos':0, 'atencion':0, 'refaccion':0, 'resueltos':0}
     try:
-        # 1. Total General
         cur.execute("SELECT COUNT(*) as t FROM tickets")
         kpis['total'] = cur.fetchone()['t']
         
-        # 2. Conteo por Estado
-        # NOTA: En tu BD el default es 'PENDIENTE', así que lo sumaremos a 'abiertos'
-        cur.execute("SELECT COUNT(*) as c FROM tickets WHERE estado = 'PENDIENTE' OR estado = 'ABIERTO'")
+        # Filtros basados en tu columna 'estado'
+        cur.execute("SELECT COUNT(*) as c FROM tickets WHERE estado = 'PENDIENTE'")
         kpis['abiertos'] = cur.fetchone()['c']
         
         cur.execute("SELECT COUNT(*) as c FROM tickets WHERE estado = 'EN_ATENCION'")
@@ -55,11 +52,10 @@ def get_kpis():
         
         cur.execute("SELECT COUNT(*) as c FROM tickets WHERE estado = 'RESUELTO'")
         kpis['resueltos'] = cur.fetchone()['c']
-        
     except Exception as e:
-        print(f"⚠️ Error SQL en KPIs: {e}")
-        
-    conn.close()
+        print(f"Error KPIs: {e}")
+    finally:
+        conn.close()
     return jsonify(kpis)
 
 @app.route('/api/dashboard/tickets')
@@ -67,36 +63,30 @@ def get_tickets():
     conn = get_db_connection()
     if not conn: return jsonify([]), 500
     cur = conn.cursor()
-    data = []
-    
     try:
-        # --- AQUÍ ESTABA EL ERROR ---
-        # Ahora seleccionamos tus columnas reales: id_clientes, num_autobus, fecha_creacion
-        # Y las renombramos (alias) para que el HTML las entienda.
-        
+        # Unimos tickets con clientes, empresas y fallas para ver nombres, no IDs
         query = """
             SELECT 
-                id, 
-                CAST(id_clientes AS VARCHAR) as empresa,  -- Mostramos el ID del cliente temporalmente
-                num_autobus as tipo_falla,                -- Usamos num_autobus en lugar de tipo falla por ahora
-                'Por Asignar' as tecnico,                 -- Tu tabla tickets NO tiene columna técnico
-                TO_CHAR(fecha_creacion, 'DD/MM/YYYY') as fecha_fmt, 
-                estado 
-            FROM tickets 
-            ORDER BY fecha_creacion DESC 
-            LIMIT 10
+                t.id, 
+                e.empresa, 
+                f.falla as tipo_falla,
+                'Sin asignar' as tecnico, 
+                TO_CHAR(t.fecha_creacion, 'DD/MM/YYYY') as fecha_fmt, 
+                t.estado 
+            FROM tickets t
+            JOIN cliente c ON t.id_clientes = c.id
+            JOIN empresas e ON c.id_empresa = e.id
+            JOIN falla_reportada f ON t.id_falla_reportada = f.id
+            ORDER BY t.fecha_creacion DESC LIMIT 10
         """
         cur.execute(query)
-        data = cur.fetchall()
-        
+        return jsonify(cur.fetchall())
     except Exception as e:
-        print(f"⚠️ Error SQL en Tabla Tickets: {e}")
-        # Si falla, devolvemos lista vacía para no romper la página
-        data = []
+        print(f"Error Tabla: {e}")
+        return jsonify([]), 500
+    finally:
+        conn.close()
         
-    conn.close()
-    return jsonify(data)
-
 # --- APIS VACÍAS (Para que no marquen error las otras pestañas) ---
 @app.route('/api/incidencias')
 def api_1(): return jsonify([])
@@ -109,4 +99,5 @@ def api_4(): return jsonify([])
 
 if __name__ == '__main__':
     # El puerto 5000 es el estándar
+
     app.run(debug=True, port=5000)
